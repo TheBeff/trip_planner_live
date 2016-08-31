@@ -7,6 +7,12 @@ var Place = db.define('place', {
 	state: Sequelize.STRING,
 	phone: Sequelize.STRING,
 	location: Sequelize.ARRAY(Sequelize.DOUBLE)
+}, {
+	instanceMethods: {
+		findCoords: function(){
+			return this.location;
+		}
+	}
 });
 
 module.exports = Place;

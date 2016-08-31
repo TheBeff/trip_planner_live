@@ -63,12 +63,26 @@ $(function initializeMap (){
       }
     }
   };
-  // drawMarker('hotel', [40.705137, -74.007624]);
-  // drawMarker('restaurant', [40.705137, -74.013940]);
-  // drawMarker('activity', [40.716291, -73.995315]);
-}
 
-function initializeOptions(){
+  $(function addToItinerary(){
+  $('#hotel-btn').on('click', function(){
+    var selectedHotel = $('#hotel-choices').find(':selected').text();
+    $('#hotel-pick').append('<span class="title">' + selectedHotel + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+    drawMarker('hotel', findCoords(selectedHotel, hotels));
+  });
+  $('#restaurant-btn').on('click', function(){
+    var selectedRestaurant = $('#restaurant-choices').find(':selected').text();
+    $('#restaurant-picks').append('<span class="title">' + selectedRestaurant + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+    drawMarker('restaurant', findCoords(selectedRestaurant, restaurants));
+  });
+  $('#activities-btn').on('click', function(){
+    var selectedActivity = $('#activity-choices').find(':selected').text();
+    $('#activity-picks').append('<span class="title">' + selectedActivity + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
+    drawMarker('activity', findCoords(selectedActivity, activities));
+  });
+});
+
+$(function initializeOptions(){
   hotels.forEach(function(hotel){
     $('#hotel-choices').append('<option>' + hotel.name + '</option>');
   });
@@ -81,22 +95,11 @@ function initializeOptions(){
 
 });
 
-$(function addToItinerary(){
-  $('#hotel-btn').on('click', function(){
-    var selectedHotel = $('#hotel-choices').find(':selected').text();
-    $('#hotel-pick').append('<span class="title">' + selectedHotel + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
-    console.log(findCoords(selectedHotel, hotels));
-    drawMarker('hotel', findCoords(selectedHotel, hotels));
-  });
-  $('#restaurant-btn').on('click', function(){
-    var selectedRestaurant = $('#restaurant-choices').find(':selected').text();
-    $('#restaurant-picks').append('<span class="title">' + selectedRestaurant + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
-  });
-  $('#activities-btn').on('click', function(){
-    var selectedActivity = $('#activity-choices').find(':selected').text();
-    $('#activity-picks').append('<span class="title">' + selectedActivity + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
-  });
+  // drawMarker('hotel', [40.705137, -74.007624]);
+  // drawMarker('restaurant', [40.705137, -74.013940]);
+  // drawMarker('activity', [40.716291, -73.995315]);
+
 });
 
-$();
+
 

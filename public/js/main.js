@@ -45,6 +45,8 @@ $(function initializeMap (){
     restaurant: '/images/restaurant.png',
     activity: '/images/star-3.png'
   };
+  
+  var markerArray = [];
 
   function drawMarker (type, coords) {
     var latLng = new google.maps.LatLng(coords[0], coords[1]);
@@ -54,6 +56,8 @@ $(function initializeMap (){
       position: latLng
     });
     marker.setMap(currentMap);
+    markerArray.push(marker);
+    return markerArray.indexOf(marker);
   }
   
   var findCoords = function(name, type){
@@ -65,21 +69,21 @@ $(function initializeMap (){
   };
 
   $(function addToItinerary(){
-  $('#hotel-btn').on('click', function(){
-    var selectedHotel = $('#hotel-choices').find(':selected').text();
-    $('#hotel-pick').append('<span class="title">' + selectedHotel + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
-    drawMarker('hotel', findCoords(selectedHotel, hotels));
-  });
-  $('#restaurant-btn').on('click', function(){
-    var selectedRestaurant = $('#restaurant-choices').find(':selected').text();
-    $('#restaurant-picks').append('<span class="title">' + selectedRestaurant + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
-    drawMarker('restaurant', findCoords(selectedRestaurant, restaurants));
-  });
-  $('#activities-btn').on('click', function(){
-    var selectedActivity = $('#activity-choices').find(':selected').text();
-    $('#activity-picks').append('<span class="title">' + selectedActivity + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button>');
-    drawMarker('activity', findCoords(selectedActivity, activities));
-  });
+    $('#hotel-btn').on('click', function(){
+      var selectedHotel = $('#hotel-choices').find(':selected').text();
+      $('#hotel-pick').append('<div><span class="title">' + selectedHotel + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+      $('#hotel-pick div:last-child').data('marker-index', drawMarker('hotel', findCoords(selectedHotel, hotels)));
+    });
+    $('#restaurant-btn').on('click', function(){
+      var selectedRestaurant = $('#restaurant-choices').find(':selected').text();
+      $('#restaurant-picks').append('<div><span class="title">' + selectedRestaurant + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+      $('#restaurant-picks div:last-child').data('marker-index', drawMarker('restaurant', findCoords(selectedRestaurant, restaurants)));
+    });
+    $('#activities-btn').on('click', function(){
+      var selectedActivity = $('#activity-choices').find(':selected').text();
+      $('#activity-picks').append('<div><span class="title">' + selectedActivity + '</span> <button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+      $('#activity-picks div:last-child').data('marker-index', drawMarker('activity', findCoords(selectedActivity, activities)));
+    });
 });
 
 $(function initializeOptions(){
@@ -92,9 +96,16 @@ $(function initializeOptions(){
   activities.forEach(function(activity){
     $('#activity-choices').append('<option>' + activity.name + '</option>');
   });
-
 });
 
+$(function deleteFromItinerary(){
+  $('#itinerary').on('click', '.remove', function(event){
+    var target = $(event.target).parent();
+    var markerToDelete = markerArray[target.data("marker-index")];
+    markerToDelete.setMap(null);
+    target.remove();
+  });
+});
   // drawMarker('hotel', [40.705137, -74.007624]);
   // drawMarker('restaurant', [40.705137, -74.013940]);
   // drawMarker('activity', [40.716291, -73.995315]);
